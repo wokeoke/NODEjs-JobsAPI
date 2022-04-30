@@ -17,9 +17,14 @@ const login = async (req, res) => {
   }
 
   const user = await User.findOne({ email });
-  // TODO: COMPARE PASSWORD
   if (!user) {
     throw new UnauthenticatedError('Invalid Credentials');
+  }
+
+  // Compare password
+  const isPasswordCorrect = await user.comparePassword(password);
+  if (!isPasswordCorrect) {
+    throw new UnauthenticatedError('Invalid Password');
   }
 
   const token = user.createJWT();
