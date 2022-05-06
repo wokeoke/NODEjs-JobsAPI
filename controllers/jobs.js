@@ -4,7 +4,8 @@ const Job = require('../models/Job');
 const User = require('../models/User');
 
 const getAllJobs = async (req, res) => {
-  res.send('Get All Jobs');
+  const jobs = await Job.find({ createdBy: req.user.userId }).sort('createdAt');
+  res.status(StatusCodes.OK).json({ jobs, count: jobs.length });
 };
 
 const getJob = async (req, res) => {
